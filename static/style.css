@@ -1,0 +1,133 @@
+/* style.css */
+body {
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: #FFFFFF;
+  text-align: center;
+}
+
+.header {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 250px;
+  margin-bottom: 5px;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.location-box {
+  position: relative;
+  margin: 20px auto;
+  width: 800px;
+  height: 50px;
+  background-color: #F2F7FA;
+  border-radius: 16px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.location-box img {
+  position: absolute;
+  left: 20px;
+  height: 28px;
+}
+
+.stream-container {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1280px;
+  background-color: #F2F7FA;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.stream-box {
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 720px;
+  border-radius: 10px;
+}
+
+.stream-box img {
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.stream-box p {
+  color: red;
+  font-size: 32px;
+}
+
+.status {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #666;
+}
+
+.counting-container {
+  margin: 30px auto 20px; /* Increased top margin for separation */
+  width: 90%;
+  max-width: 1200px;
+  background-color: #F2F7FA;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.dashboard {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.circle {
+  position: relative;
+  text-align: center;
+  margin: 15px;
+}
+
+.circle canvas {
+  transform: rotate(-90deg);
+}
+
+.circle span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.label {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.update-time {
+  font-size: 14px;
+  color: #666;
+  margin-top: 15px;
+}

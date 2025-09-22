@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCTV Vehicle Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .dashboard {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+    .circle {
+      position: relative;
+      text-align: center;
+      margin: 15px;
+    }
+    .circle canvas {
+      transform: rotate(-90deg);
+    }
+    .circle span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 30px;
+      font-weight: 600;
+    }
+    .label {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .update-time {
+      font-size: 14px;
+      color: #666;
+      margin-top: 15px;
+    }
+    .stream-container {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .stream-box {
+      width: 100%;
+      aspect-ratio: 16 / 9; /* Matches common video aspect ratio; adjust to 4/3 if needed */
+      overflow: hidden;
+    }
+    .stream-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Fills the box, may crop edges */
+      /* Alternative: object-fit: contain; to show entire image with letterboxing */
+      display: block;
+    }
+    .stream-box p {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 18px;
+      color: #666;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+  <script>
+    async function updateDashboard() {
+      try {
+        const response = await fetch('/api/vehicle-count');
+        const data = await response.json();
+        const total = data.total;
+        const ctxElements = document.querySelectorAll('.progress-circle');
+        
+        ctxElements.forEach((ctx, index) => {
+          const label = ['motorcycle', 'car', 'truck', 'bus', 'total'][index];
+          let count;
+          if (label === 'total') {
+            count = total;
+          } else {
+            count = data.data[label] || 0;
+          }
+          const percentage = label === 'total' ? 75 : (count / total) * 100 || 0;
+          const circleCtx = ctx.getContext('2d');
+          circleCtx.clearRect(0, 0, ctx.width, ctx.height);
+          const centerX = ctx.width / 2;
+          const centerY = ctx.height / 2;
+          const radius = 50;
+          const startAngle = 0;
+          const endAngle = (percentage / 100) * 2 * Math.PI;
+          
+          circleCtx.beginPath();
+          circleCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+          circleCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+          circleCtx.fill();
+          
+          circleCtx.beginPath();
+          circleCtx.arc(centerX, centerY, radius, startAngle, endAngle);
+          circleCtx.lineWidth = 12;
+          const colors = ['#9370DB', '#FF69B4', '#ADFF2F', '#32CD32', '#FFA500'];
+          circleCtx.strokeStyle = colors[index];
+          circleCtx.stroke();
+          
+          ctx.nextSibling.textContent = count;
+        });
+        
+        document.getElementById('update-time').textContent = `Last updated: ${new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Makassar' })} WITA`;
+      } catch (error) {
+        console.error('Error updating dashboard:', error);
+      }
+    }
+    setInterval(updateDashboard, 1000);
+    window.onload = updateDashboard;
+  </script>
+</head>
+<body>
+  <div class="header">
+    <img src="/static/logo-vehicle2.png" alt="Logo" class="logo">
+    <div class="title">CCTV VEHICLE DETECTION</div>
+  </div>
+  <div class="location-box">
+    <img src="/static/camera-icon.png" alt="CCTV Icon">
+    <span>{{ location_name }}</span>
+  </div>
+  <div class="stream-container">
+    <div class="stream-box">
+      {% if cctv_connected %}
+        <img src="/video_feed" alt="CCTV Stream">
+      {% else %}
+        <p>Stream is not connected</p>
+      {% endif %}
+    </div>
+    <div class="status">
+      {% if cctv_connected %}
+        Status: <span style="color: green;">Connected</span>
+      {% else %}
+        Status: <span style="color: red;">Disconnected</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="counting-container">
+    <div class="dashboard">
+      <div class="circle"><canvas class="progress-circle" width="120" height="120"></canvas><span>0</span><div class="label">motorcycle</div></div>
+      <div class="circle"><canvas class="progress-circle" width="120" height="120"></canvas><span>0</span><div class="label">car</div></div>
+      <div class="circle"><canvas class="progress-circle" width="120" height="120"></canvas><span>0</span><div class="label">truck</div></div>
+      <div class="circle"><canvas class="progress-circle" width="120" height="120"></canvas><span>0</span><div class="label">bus</div></div>
+      <div class="circle"><canvas class="progress-circle" width="120" height="120"></canvas><span>0</span><div class="label">total</div></div>
+    </div>
+    <div class="update-time" id="update-time"></div>
+  </div>
+</body>
+</html>
